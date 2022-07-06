@@ -16,15 +16,19 @@ const idToTemplate = cached(id => {
   const el = query(id)
   return el && el.innerHTML
 })
-
+// 保留Vue实例的$mount方法
 const mount = Vue.prototype.$mount
+// $mount 把生成的 Dom 挂载在页面上
 Vue.prototype.$mount = function (
   el?: string | Element,
+  // 非ssr情况下为 false，ssr 时候为 true
   hydrating?: boolean
 ): Component {
+  // 获取 el 对象
   el = el && query(el)
 
   /* istanbul ignore if */
+  // el 不能是 body 或者 html
   if (el === document.body || el === document.documentElement) {
     __DEV__ &&
       warn(
@@ -35,11 +39,15 @@ Vue.prototype.$mount = function (
 
   const options = this.$options
   // resolve template/el and convert to render function
+  // 把 template/el 转换成 render 函数
   if (!options.render) {
     let template = options.template
+    // 如果模板存在
     if (template) {
       if (typeof template === 'string') {
+        // 如果模板是 id 选择器
         if (template.charAt(0) === '#') {
+          // 获取对应的 DOM 对象的 innerHTML
           template = idToTemplate(template)
           /* istanbul ignore if */
           if (__DEV__ && !template) {
@@ -88,6 +96,7 @@ Vue.prototype.$mount = function (
       }
     }
   }
+  // 调用 mount 方法，渲染 DOM
   return mount.call(this, el, hydrating)
 }
 

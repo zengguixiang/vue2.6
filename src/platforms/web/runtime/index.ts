@@ -19,6 +19,8 @@ import platformComponents from './components/index'
 import type { Component } from 'types/component'
 
 // install platform specific utils
+// 判断是否是关键属性（表单元素的 input/checked/selected/muted）
+// 如果是这些属性，设置el.props属性（属性不设置到标签上）
 Vue.config.mustUseProp = mustUseProp
 Vue.config.isReservedTag = isReservedTag
 Vue.config.isReservedAttr = isReservedAttr
@@ -30,6 +32,7 @@ extend(Vue.options.directives, platformDirectives)
 extend(Vue.options.components, platformComponents)
 
 // install platform patch function
+// 把虚拟DOM转换成真实DOM
 Vue.prototype.__patch__ = inBrowser ? patch : noop
 
 // public mount method
